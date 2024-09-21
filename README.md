@@ -8,5 +8,8 @@
 
 This repository serves as an entry point for all my future projects.
 
-SPDX-License-Identifier: (EUPL-1.2)
-Copyright © 2019-2024 netsnek
+<!--
+SPDX-FileType: DOCUMENTATION
+SPDX-License-Identifier: MIT
+SPDX-FileCopyrightText: Copyright (c) 2024 Florian Kleber
+-->
