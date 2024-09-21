@@ -26,5 +26,5 @@ the technical issues involved. We are all humans, and frustrations can
 be high on both sides of the process. Try to keep in mind the immortal
 words of Bill and Ted, "Be excellent to each other."
 
-SPDX-License-Identifier: (EUPL-1.2)
-Copyright © 2019-2024 netsnek
+SPDX-License-Identifier: (MIT)
+Copyright (c) 2024 Florian Kleber

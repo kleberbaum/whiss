@@ -40,5 +40,5 @@
 -   Each pull request must have a label
 -   Each pull request should be merged by the maintainer
 
-SPDX-License-Identifier: (EUPL-1.2)
-Copyright © 2019-2024 netsnek
+SPDX-License-Identifier: (MIT)
+Copyright (c) 2024 Florian Kleber
