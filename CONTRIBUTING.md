@@ -40,5 +40,8 @@
 -   Each pull request must have a label
 -   Each pull request should be merged by the maintainer
 
-SPDX-License-Identifier: (MIT)
-Copyright (c) 2024 Florian Kleber
+<!--
+SPDX-FileType: DOCUMENTATION
+SPDX-License-Identifier: MIT
+SPDX-FileCopyrightText: Copyright (c) 2024 Florian Kleber
+-->
