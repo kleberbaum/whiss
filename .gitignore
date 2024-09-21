@@ -1,31 +1,34 @@
-#> Environment Section
-# Docker environment
+# Dependency directories
+node_modules/
+
+# Environment variables
 .env
 
-# Django environments
-linux-venv/
-windows-env/
+# Build output
+dist/
+client/dist
+build/
 
-# Pycache
-__pycache__/
-*.pyc
+# Logs
+logs/
+*.log
 
-# SQLite
-*.sqlite3
+# Operating System Files
+.DS_Store
+Thumbs.db
 
-#> Media Section
-# Audios
-*.ogg
-*.mp3
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Images
-*.jpg
-*.png
-*.gif
-*.svg
+# Temporary files
+*.tmp
+*.temp
 
-# Fonts
-*.ttf
+# Bun
+#bun.lockb
 
-# SPDX-License-Identifier: (EUPL-1.2)
-# Copyright © 2019-2024 netsnek
+# Pylon specific
+.pylon/
