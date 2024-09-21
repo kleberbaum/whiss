@@ -1,0 +1,17 @@
+/**
+ * @license
+ *
+ * SPDX-FileType: SOURCE
+ * SPDX-License-Identifier: MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2024 Florian Kleber
+ *
+ * Use of this source code is governed by an MIT license that can be found
+ * in the LICENSE file at https://github.com/kleberbaum/whiss/blob/main/LICENSES/preferred/EUPL-1.2
+ */
+{
+  "extends": "@getcronit/pylon/tsconfig.pylon.json",
+  "compilerOptions": {
+    // add Bun type definitions
+    "types": ["bun-types"]
+  }
+}
