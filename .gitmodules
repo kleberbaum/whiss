@@ -1,3 +1,3 @@
-[submodule "go/golang-crypto"]
-	path = go/golang-crypto
-	url = git@github.com:golang/crypto.git
+[submodule "client/go/golang-crypto"]
+	path = client/go/golang-crypto
+	url = https://github.com/golang/crypto.git
