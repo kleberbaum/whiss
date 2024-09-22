@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"syscall/js"
+	"time"
 )
 
 type TermWindow struct {
@@ -138,6 +139,8 @@ func DoSsh(conn net.Conn, term *Term, options *SSHOptions) error {
 		return err
 	}
 	defer sshConn.Close()
+	// Start keepalive
+	go startKeepAlive(sshConn, 30*time.Second)
 	go func() {
 		<-options.DisconnectCh
 		fmt.Println("disconnecting with chan")
@@ -212,6 +215,22 @@ func DoSsh(conn net.Conn, term *Term, options *SSHOptions) error {
 	return nil
 }
 
+// startKeepAlive sends periodic keepalive messages to the SSH server
+func startKeepAlive(sshConn ssh.Conn, interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			_, _, err := sshConn.SendRequest("keepalive@openssh.com", true, nil)
+			if err != nil {
+				fmt.Println("error sending keepalive:", err)
+				return
+			}
+		}
+	}
+}
+
 // proposal: https://github.com/golang/go/issues/37913
 func sshDisconnect(sshConn ssh.Conn) (err error) {
 	// https://www.rfc-editor.org/rfc/rfc4253#section-12
@@ -226,7 +245,10 @@ func sshDisconnect(sshConn ssh.Conn) (err error) {
 
 	p := append(
 		[]byte{SSH_MSG_DISCONNECT},
-		ssh.Marshal(disconnectMsg{Reason: SSH_DISCONNECT_BY_APPLICATION, Description: "Finished"})...,
+		ssh.Marshal(disconnectMsg{
+			Reason:      SSH_DISCONNECT_BY_APPLICATION,
+			Description: "Finished",
+		})...,
 	)
 	// See golang-crypto.patch
 	return ssh.PublicWritePacket(sshConn, p)

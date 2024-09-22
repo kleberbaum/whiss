@@ -6,7 +6,7 @@
           <v-icon :icon="mdiConsoleLine"/>
         </v-avatar>
         <a href="" class="me-4 font-weight-bold" style="color: inherit; text-decoration: none">
-          Piping SSH
+          Whiss SSH
         </a>
 
         <v-spacer></v-spacer>
@@ -15,7 +15,7 @@
         <v-btn @click="keyManagerDialog = !keyManagerDialog" variant="text" :prepend-icon="mdiKey">
           Manage keys
         </v-btn>
-        <v-btn :icon="mdiGithub" href="https://github.com/nwtgck/piping-ssh-web" target="_blank"/>
+        <v-btn :icon="mdiGithub" href="https://github.com/kleberbaum/whiss" target="_blank"/>
       </v-container>
     </v-app-bar>
 
@@ -23,7 +23,7 @@
       <v-container v-if="!connecting">
         <v-row>
           <v-col>
-            <v-sheet v-if="!supportsRequestStreams">
+            <!-- <v-sheet v-if="!supportsRequestStreams">
               <v-alert color="warning" :icon="mdiAlertCircle" variant="outlined" prominent border="top" style="margin-bottom: 2rem;">
                 <template v-slot:text>
                   Sorry, this browser is not supported.<br>
@@ -31,17 +31,17 @@
                   You can also use Microsoft Edge or other Chromium-based browsers.
                 </template>
               </v-alert>
-            </v-sheet>
+            </v-sheet> -->
 
             <v-sheet min-height="70vh" rounded="lg" style="padding: 1rem">
               <v-form @submit.prevent="connect" v-model="formValid" :disabled="!supportsRequestStreams">
-                <v-combobox label="Piping Server" v-model="pipingServerUrl" :items="pipingServerUrls" required variant="solo-filled" :rules="createRequiredRules('Piping Server')"></v-combobox>
+                <v-combobox label="Websocket URL" v-model="pipingServerUrl" :items="pipingServerUrls" required variant="solo-filled" :rules="createRequiredRules('Piping Server')"></v-combobox>
                 <v-row>
                   <v-col>
-                    <v-text-field label="client-server path" v-model="csPath" required variant="solo-filled" :rules="createRequiredRules('client-server path')"></v-text-field>
+                    <v-text-field label="SSH Server" v-model="csPath" required variant="solo-filled" :rules="createRequiredRules('client-server path')"></v-text-field>
                   </v-col>
                   <v-col>
-                    <v-text-field label="server-client path" v-model="scPath" required variant="solo-filled" :rules="createRequiredRules('server-client path')"></v-text-field>
+                    <v-text-field label="SSH Port" v-model="scPath" required variant="solo-filled" :rules="createRequiredRules('server-client path')"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-text-field label="user name" v-model="username" required variant="solo-filled" :rules="createRequiredRules('user name')"></v-text-field>
@@ -182,17 +182,17 @@ const KeyGenerator = defineAsyncComponent(() => import("@/components/KeyGenerato
 const supportsRequestStreams = ref(true /* There are many Chromium-based browser users for now */);
 supportsRequestStreamsPromise.then(supports => supportsRequestStreams.value = supports);
 
-const pipingServerUrl = ref<string>(fragmentParams.pipingServerUrl() ?? "https://ppng.io");
+const pipingServerUrl = ref<string>(fragmentParams.pipingServerUrl() ?? "wss://wss.erebos.xyz");
 const pipingServerUrls = ref<string[]>([
-  "https://ppng.io",
-  "https://piping.nwtgck.repl.co",
+  "wss://wss.erebos.xyz",
+  "wss://wss.netsnek.com",
 ]);
 const editingPipingServerHeaders = ref<Array<[string, string]>>(fragmentParams.pipingServerHeaders() ?? []);
 const pipingServerHeaders = computed<Array<[string, string]>>(() => {
   return editingPipingServerHeaders.value.filter(([name,value]) => name !== "");
 });
-const csPath = ref<string>(fragmentParams.csPath() ?? randomString(4));
-const scPath = ref<string>(fragmentParams.scPath() ?? randomString(4));
+const csPath = ref<string>(fragmentParams.csPath() ?? "");
+const scPath = ref<string>(fragmentParams.scPath() ?? "");
 const username = ref<string>(fragmentParams.sshUsername() ?? "");
 const sshServerPortForCommandHint = ref<string>(fragmentParams.sshServerPortForHint() ?? "22");
 

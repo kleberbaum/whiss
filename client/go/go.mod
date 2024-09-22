@@ -12,4 +12,7 @@ require (
 // All patch is written in ./golang-crypto.patch.
 replace golang.org/x/crypto => ./golang-crypto
 
-require golang.org/x/sys v0.21.0 // indirect
+require (
+	github.com/coder/websocket v1.8.12 // indirect
+	golang.org/x/sys v0.21.0 // indirect
+)

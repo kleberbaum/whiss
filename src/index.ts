@@ -111,7 +111,7 @@ app.get(
 );
 
 // Serve static files from the './public' directory
-app.use('/*', serveStatic({ root: './client' }));
+app.use('/*', serveStatic({ root: './client/dist' }));
 
 // Start the server
 Bun.serve({

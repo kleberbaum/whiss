@@ -1,78 +1,69 @@
 package main
 
 import (
-	"bytes"
-	"errors"
-	"github.com/nwtgck/piping-ssh-web/go/jsutil"
+	"context"
 	"net"
-	"syscall/js"
 	"time"
+	"syscall/js"
+	"github.com/coder/websocket"
 )
 
 type TransportConn struct {
-	jsReadable js.Value
-	jsWritable js.Value
-
-	jsReader           js.Value
-	readBuffer         bytes.Buffer
-	underlyingReadDone bool
-
-	jsWriter js.Value
+	conn         net.Conn
+	wsConn       *websocket.Conn
+	pingInterval time.Duration
+	closeCh      chan struct{}
+	started      bool
 }
 
-func NewTransportConn(jsReadable js.Value, jsWritable js.Value) net.Conn {
-	jsReader := jsReadable.Call("getReader")
-	jsWriter := jsWritable.Call("getWriter")
-	return &TransportConn{jsReadable: jsReadable, jsWritable: jsWritable, jsReader: jsReader, jsWriter: jsWriter}
+func NewTransportConn(ctx context.Context, jsWsUrl js.Value) (*TransportConn, error) {
+	// Convert jsWsUrl (js.Value) to a Go string
+	wsUrl := jsWsUrl.String()
+	// Establish WebSocket connection
+	ws, _, err := websocket.Dial(ctx, wsUrl, nil)
+	if err != nil {
+		return nil, err
+	}
+	// Convert the WebSocket connection to a net.Conn
+	conn := websocket.NetConn(ctx, ws, websocket.MessageBinary)
+	tconn := &TransportConn{
+		conn:         conn,
+		wsConn:       ws,
+		pingInterval: 30 * time.Second,
+		closeCh:      make(chan struct{}),
+	}
+	return tconn, nil
 }
 
 func (d *TransportConn) Read(p []byte) (int, error) {
-	for !d.underlyingReadDone && d.readBuffer.Len() == 0 {
-		result, err := jsutil.AwaitPromise(d.jsReader.Call("read"))
-		if err != nil {
-			return 0, err
-		}
-		done := result.Get("done").Bool()
-		d.underlyingReadDone = done
-		if done {
-			break
-		}
-		value := jsutil.Uint8ArrayToBytes(result.Get("value"))
-		d.readBuffer.Write(value)
-	}
-	return d.readBuffer.Read(p)
+	return d.conn.Read(p)
 }
 
 func (d *TransportConn) Write(p []byte) (int, error) {
-	_, err := jsutil.AwaitPromise(d.jsWriter.Call("write", jsutil.BytesToUint8Array(p)))
-	if err != nil {
-		return 0, err
-	}
-	return len(p), nil
+	return d.conn.Write(p)
 }
 
 func (d *TransportConn) Close() error {
-	_, err1 := jsutil.AwaitPromise(d.jsReader.Call("cancel"))
-	_, err2 := jsutil.AwaitPromise(d.jsWriter.Call("close"))
-	return errors.Join(err1, err2)
+	close(d.closeCh)
+	return d.conn.Close()
 }
 
 func (d *TransportConn) LocalAddr() net.Addr {
-	return nil
+	return d.conn.LocalAddr()
 }
 
 func (d *TransportConn) RemoteAddr() net.Addr {
-	return nil
+	return d.conn.RemoteAddr()
 }
 
 func (d *TransportConn) SetDeadline(t time.Time) error {
-	return nil
+	return d.conn.SetDeadline(t)
 }
 
 func (d *TransportConn) SetReadDeadline(t time.Time) error {
-	return nil
+	return d.conn.SetReadDeadline(t)
 }
 
 func (d *TransportConn) SetWriteDeadline(t time.Time) error {
-	return nil
+	return d.conn.SetWriteDeadline(t)
 }

@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"context"
 	"github.com/nwtgck/piping-ssh-web/go/jsutil"
 	"golang.org/x/crypto/ssh"
 	"syscall/js"
@@ -67,10 +68,16 @@ func jsDoSsh(this js.Value, args []js.Value) any {
 	jsParams := args[0]
 	jsFunctions := args[1]
 	return jsutil.NewPromise(func() (any, error) {
+		// WebSocket URL for SSH
 		jsTransport := jsParams.Get("transport")
-		jsReadable := jsTransport.Get("readable")
-		jsWritable := jsTransport.Get("writable")
-		conn := NewTransportConn(jsReadable, jsWritable)
+		jsWsUrl := jsTransport.Get("wsUrl")
+		// Create a context
+		ctx := context.Background()
+		// Establish WebSocket connection using the TransportConn
+		conn, errr := NewTransportConn(ctx, jsWsUrl)
+		if errr != nil {
+			return nil, errr
+		}
 		defer conn.Close()
 		termBytesCh := make(chan []byte)
 		jsTermReadable := jsParams.Get("termReadable")
