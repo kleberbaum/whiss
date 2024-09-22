@@ -9,6 +9,7 @@
  * in the LICENSE file at https://github.com/kleberbaum/whiss/blob/main/LICENSES/preferred/EUPL-1.2
  */
 import { app } from '@getcronit/pylon'
+import { serveStatic } from "hono/bun";
 
 export const graphql = {
   Query: {
@@ -28,5 +29,8 @@ export const graphql = {
     }
   }
 }
+
+// Serve static files from the './public' directory
+app.use('/*', serveStatic({ root: './client/dist' }));
 
 export default app;
