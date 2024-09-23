@@ -103,7 +103,14 @@ async function createTransport(useWebSocket) {
   let transport;
 
   if (useWebSocket) {
-    const wsUrl = `${props.pipingServerUrl}/${props.csPath}:${props.scPath}`; // Change this URL as needed
+    let wsUrl = ''
+
+    if (props.csPath) {
+      wsUrl = `${props.pipingServerUrl}/${props.csPath}:${fragmentParams.sshServerPortForHint() ?? 22}`;
+    } else {
+      wsUrl = `${props.pipingServerUrl}`;
+    }
+
     const { readable, writable } = WebSocketStream(wsUrl);
 
     transport = {

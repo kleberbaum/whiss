@@ -36,14 +36,6 @@
             <v-sheet min-height="70vh" rounded="lg" style="padding: 1rem">
               <v-form @submit.prevent="connect" v-model="formValid" :disabled="!supportsRequestStreams">
                 <v-combobox label="Websocket URL" v-model="pipingServerUrl" :items="pipingServerUrls" required variant="solo-filled" :rules="createRequiredRules('Piping Server')"></v-combobox>
-                <v-row>
-                  <v-col>
-                    <v-text-field label="SSH Server" v-model="csPath" required variant="solo-filled" :rules="createRequiredRules('client-server path')"></v-text-field>
-                  </v-col>
-                  <v-col>
-                    <v-text-field label="SSH Port" v-model="scPath" required variant="solo-filled" :rules="createRequiredRules('server-client path')"></v-text-field>
-                  </v-col>
-                </v-row>
                 <v-text-field label="user name" v-model="username" required variant="solo-filled" :rules="createRequiredRules('user name')"></v-text-field>
 
                 <template v-if="showsMoreOptions">
@@ -62,8 +54,14 @@
                   <v-btn @click="editingPipingServerHeaders.push(['', ''])" :prepend-icon="mdiPlus" variant="outlined" style="margin-bottom: 1rem; text-transform: none">
                     Add header
                   </v-btn>
-
-                  <v-text-field v-model="sshServerPortForCommandHint" label="SSH server port for command" variant="solo-filled"></v-text-field>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="SSH Server" v-model="csPath" variant="solo-filled"></v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-text-field v-model="sshServerPortForCommandHint" label="SSH Port" variant="solo-filled"></v-text-field>
+                  </v-col>
+                </v-row>
                   <v-text-field v-model="editingSshPassword" label="SSH password" :type="showsSshPassword ? 'text' : 'password'" variant="solo-filled">
                     <template v-slot:append-inner>
                       <v-btn @click="showsSshPassword = !showsSshPassword" :icon="showsSshPassword ? mdiEyeOff : mdiEye" variant="text"></v-btn>
