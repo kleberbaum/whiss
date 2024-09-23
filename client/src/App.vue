@@ -180,10 +180,11 @@ const KeyGenerator = defineAsyncComponent(() => import("@/components/KeyGenerato
 const supportsRequestStreams = ref(true /* There are many Chromium-based browser users for now */);
 supportsRequestStreamsPromise.then(supports => supportsRequestStreams.value = supports);
 
-const pipingServerUrl = ref<string>(fragmentParams.pipingServerUrl() ?? "wss://wss.erebos.xyz");
+const pipingServerUrl = ref<string>(fragmentParams.pipingServerUrl() ?? "wss://ssh.whiss.org");
 const pipingServerUrls = ref<string[]>([
-  "wss://wss.erebos.xyz",
-  "wss://wss.netsnek.com",
+  "wss://ssh.whiss.org",
+  "wss://ssh.erebos.xyz",
+  "wss://ssh.netsnek.com",
 ]);
 const editingPipingServerHeaders = ref<Array<[string, string]>>(fragmentParams.pipingServerHeaders() ?? []);
 const pipingServerHeaders = computed<Array<[string, string]>>(() => {
