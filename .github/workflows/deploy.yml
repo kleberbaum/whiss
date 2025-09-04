@@ -54,7 +54,7 @@ jobs:
           # Optional: Specify the Wrangler version
           wranglerVersion: '3'
       - name: Add publish URL as commit status
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const url = "${{ steps.cloudflare_pages_deploy.outputs.url }}";
